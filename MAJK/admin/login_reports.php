@@ -45,7 +45,6 @@
         <div class="alert alert-primary">Login Reports</div>
         <div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="myModallabel"></div>
         <div class="well col-lg-12">
-            <!-- Search input -->
             <div class="form-group">
                 <label for="searchInput">Search:</label>
                 <input type="text" id="searchInput" class="form-control" placeholder="Enter employee name">
@@ -56,12 +55,11 @@
             <?php
                 $events = [];
                 $employeeColors = [
-                    1 => '#3498db', // Blue
-                    2 => '#e74c3c', // Red
-                    3 => '#2ecc71', // Green
-                    4 => '#f39c12', // Orange
-                    5 => '#9b59b6', // Purple
-                    // Add more colors as needed
+                    1 => '#3498db', 
+                    2 => '#e74c3c', 
+                    3 => '#2ecc71',  
+                    4 => '#f39c12', 
+                    5 => '#9b59b6', 
                 ];
 
                 $attendance_qry = $conn->query("SELECT a.*, concat(e.firstname,' ',e.middlename,' ',e.lastname) as name, e.employee_id FROM `attendance` a inner join employee e on a.employee_id = e.employee_id ") or die(mysqli_error());
@@ -69,18 +67,16 @@
                 while ($row = $attendance_qry->fetch_array()) {
                     $employeeId = $row['employee_id'];
 
-                    // If the employee doesn't have a color assigned, assign a default color
                     if (!isset($employeeColors[$employeeId])) {
-                        $employeeColors[$employeeId] = '#95a5a6'; // Gray
+                        $employeeColors[$employeeId] = '#95a5a6'; 
                     }
 
-                    // Event for specific time
                     $event = [
                         'title' => $row['name'],
-                        'start' => date('Y-m-d H:00:s', strtotime($row['datetime_log'])), // Only show hour
+                        'start' => date('Y-m-d H:00:s', strtotime($row['datetime_log'])), 
                         'allDay' => false,
                         'url' => 'javascript:void(0);',
-                        'color' => $employeeColors[$employeeId], // Assign color based on employee
+                        'color' => $employeeColors[$employeeId], 
                     ];
 
                     array_push($events, $event);
@@ -93,7 +89,7 @@
 <script type="text/javascript">
     $(document).ready(function () {
         var events = <?php echo json_encode($events); ?>;
-        var filteredEvents = events.slice(); // Create a copy of the events array for filtering
+        var filteredEvents = events.slice(); 
 
         $('#calendar').fullCalendar({
             header: {
@@ -105,33 +101,33 @@
             navLinks: true,
             editable: false,
             eventLimit: true,
-            displayEventTime: false, // Hide event time
-            displayEventEnd: false,  // Hide event end time
-            allDaySlot: false,       // Remove the all-day slot
+            displayEventTime: false, 
+            displayEventEnd: false, 
+            allDaySlot: false,     
             events: events,
             eventClick: function(calEvent, jsEvent, view) {
                 alert('Attendance: ' + calEvent.title);
-                // You can replace the alert with your custom logic for detailed viewing
+                
             },
             viewRender: function(view, element) {
-                // Hide the employee names below the calendar
+                
                 $('.fc-axis.fc-widget-header').hide();
             }
         });
 
-        // Add search functionality
+       
         $('#searchInput').on('input', function() {
             var searchString = $(this).val().toLowerCase();
 
-            // Filter events based on the search string
+            
             filteredEvents = events.filter(function(event) {
                 return event.title.toLowerCase().includes(searchString);
             });
 
-            // Remove existing events from the calendar
+            
             $('#calendar').fullCalendar('removeEvents');
 
-            // Add filtered events to the calendar
+            
             $('#calendar').fullCalendar('addEventSource', filteredEvents);
         });
     });
