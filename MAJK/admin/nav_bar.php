@@ -25,7 +25,7 @@
 				</a>
 			</div>
 			<div id="sidebar-field">
-				<a href="daily_report.php" class="sidebar-item">
+				<a href="login_reports.php" class="sidebar-item">
 						<div class="sidebar-icon"><i class="fa fa-bell"> </i></div> Login Reports
 				</a>
 			</div>	
