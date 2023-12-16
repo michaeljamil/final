@@ -25,21 +25,16 @@
 				</a>
 			</div>
 			<div id="sidebar-field">
+				<a href="daily_report.php" class="sidebar-item">
+						<div class="sidebar-icon"><i class="fa fa-bell"> </i></div> Login Reports
+				</a>
+			</div>	
+			<div id="sidebar-field">
 				<a href="users.php" class="sidebar-item">
 						<div class="sidebar-icon"><i class="fa fa-users"> </i></div>  Users
 				</a>
 			</div>
-			<div id="sidebar-field">
-				<a href="#" class="sidebar-item">
-						<div class="sidebar-icon"><i class="fa fa-bell"> </i></div> Daily Report
-				</a>
-			</div>
-			<div id="sidebar-field">
-				<a href="#" class="sidebar-item">
-						<div class="sidebar-icon"><i class="fa fa-calendar"> </i></div> Monthly Report
-				</a>
-			</div>
-
+			
 		</div>
 		<script>
 			$(document).ready(function(){

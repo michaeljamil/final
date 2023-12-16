@@ -6,6 +6,7 @@
 	<head>
 		<title>Attendance List | Employee Attendance Record System</title>
 		<?php include('header.php') ?>
+		
 	</head>
 	<body>
 		<?php include('nav_bar.php') ?>
@@ -18,7 +19,6 @@
 				<table id="table" class="table table-bordered table-striped">
 					<thead>
 						<tr>
-							<th> Login ID </th>
 							<th>Employee ID</th>
 							<th>Name</th>
 							<th>Date</th>
@@ -34,7 +34,6 @@
 							
 					?>	
 						<tr>
-							<td><?php echo $row['id']?></td>
 							<td><?php echo $row['employee_id']?></td>
 							<td><?php echo htmlentities($row['name'])?></td>
 							<td><?php echo date("F d, Y", strtotime($row['datetime_log']))?></td>
