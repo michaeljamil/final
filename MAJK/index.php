@@ -52,50 +52,75 @@
 	</body>
 	<script>
 		$(document).ready(function(){
-			setInterval(function(){
-				var time = new Date();
-				var now = time.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true })
-				$('#now').html(now)
-			},500)
-			console.log()
+    setInterval(function(){
+        var time = new Date();
+        var now = time.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true });
 
-			$('.log_now').each(function(){
-				$(this).click(function(){
-					var _this = $(this)
-					var eno = $('[name="eno"]').val()
-					if(eno == ''){
-						alert("Please enter your employee number");
-					}else{
-						$('.log_now').hide()		
-						$('.loading').show()
-						$.ajax({
-							url:'./admin/time_log.php',
-							method:'POST',
-							data:{type:_this.attr('data-id'),eno:$('[name="eno"]').val()},
-							error:err=>console.log(err),
-							success:function(resp){
-								if(typeof resp != undefined){
-									resp = JSON.parse(resp)
+        // Split up the time components
+        var timeComponents = now.split(/:| /);
+        var hour = timeComponents[0];
+        var minute = timeComponents[1];
+        var second = timeComponents[2];
+        var period = timeComponents[3];
 
-									if(resp.status == 1){
-										$('[name="eno"]').val('')
-										$('#log_display').html(resp.msg)
-										$('.log_now').show()		
-										$('.loading').hide()
-										setTimeout(function(){
-										$('#log_display').html('')
-										},5000)
-									}else{
-										alert(resp.msg)
-										$('.log_now').show()		
-										$('.loading').hide()
-									}
-								}
-							}
-						})		
-					}
-				})
-			})
-		})
+        $('#now').html(now);
+    }, 500);
+
+    $('.log_now').each(function(){
+        $(this).click(function(){
+            var _this = $(this);
+            var eno = $('[name="eno"]').val();
+            
+            if(eno == ''){
+                alert("Please enter your employee number");
+            } else {
+                $('.log_now').hide();
+                $('.loading').show();
+
+                // Split up the time components
+                var time = new Date();
+                var timeComponents = time.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true }).split(/:| /);
+                var hour = timeComponents[0];
+                var minute = timeComponents[1];
+                var second = timeComponents[2];
+                var period = timeComponents[3];
+
+                // Send time components along with other data
+                $.ajax({
+                    url: './admin/time_log.php',
+                    method: 'POST',
+                    data: {
+                        type: _this.attr('data-id'),
+                        eno: $('[name="eno"]').val(),
+                        hour: hour,
+                        minute: minute,
+                        second: second,
+                        period: period
+                    },
+                    error: err => console.log(err),
+                    success: function(resp){
+                        if(typeof resp != undefined){
+                            resp = JSON.parse(resp);
+
+                            if(resp.status == 1){
+                                $('[name="eno"]').val('');
+                                $('#log_display').html(resp.msg);
+                                $('.log_now').show();
+                                $('.loading').hide();
+                                setTimeout(function(){
+                                    $('#log_display').html('');
+                                }, 5000);
+                            } else {
+                                alert(resp.msg);
+                                $('.log_now').show();
+                                $('.loading').hide();
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    });
+});
 	</script>
 </html>

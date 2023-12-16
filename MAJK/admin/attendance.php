@@ -36,7 +36,7 @@
 						<tr>
 							<td><?php echo $row['employee_id']?></td>
 							<td><?php echo htmlentities($row['name'])?></td>
-							<td><?php echo date("F d, Y", strtotime($row['datetime_log']))?></td>
+							<td><?php echo date("F d, Y", strtotime($row['atlog_date']))?></td>
 							<?php 
 							if($row['log_type'] ==1){
 								$log = "TIME IN AM";
@@ -50,8 +50,8 @@
 							}
 							?>
 							<td><?php echo $log ?></td>
-							<td><?php echo date("h:i a", strtotime($row['datetime_log']))?></td>
-							<td><center><button data-id = "<?php echo $row['id']?>" class = "btn btn-sm btn-outline-danger remove_log" type="button"><i class = "fa fa-trash"></i></button></center></td>
+							<td><?php echo date("h:i a", strtotime($row['atlog_date']))?></td>
+							<td><center><button data-id = "<?php echo $row['atlog_id']?>" class = "btn btn-sm btn-outline-danger remove_log" type="button"><i class = "fa fa-trash"></i></button></center></td>
 						</tr>
 					<?php
 						}
