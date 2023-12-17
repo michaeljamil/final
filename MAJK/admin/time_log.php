@@ -30,16 +30,25 @@ if ($qry->num_rows > 0) {
         $existing_entry = $check_entry->fetch_assoc();
 
         if ($type == 1 && $existing_entry['am_in'] === null) {
-            $update_log = $conn->query("UPDATE attendance SET am_in = '$logTime' WHERE atlog_date = '$currentDate' AND employee_id = '{$emp['employee_id']}'");
+            $am_late = (strtotime($logTime) < strtotime('8:00:00')) ? 'Late' : 'On Time';
+            
+            $update_log = $conn->query("UPDATE attendance SET am_in = '$logTime', am_late = '$am_late' WHERE atlog_date = '$currentDate' AND employee_id = '{$emp['employee_id']}'");
             $logMessage = ' time in this morning';
+        
         } elseif ($type == 2 && $existing_entry['am_out'] === null) {
-            $update_log = $conn->query("UPDATE attendance SET am_out = '$logTime' WHERE atlog_date = '$currentDate' AND employee_id = '{$emp['employee_id']}'");
+            $am_undertime = (strtotime($logTime) < strtotime('12:00:00')) ? 'Undertime' : 'No';
+           
+            $update_log = $conn->query("UPDATE attendance SET am_out = '$logTime', am_undertime = '$am_undertime' WHERE atlog_date = '$currentDate' AND employee_id = '{$emp['employee_id']}'");
             $logMessage = ' time out this morning';
         } elseif ($type == 3 && $existing_entry['pm_in'] === null) {
-            $update_log = $conn->query("UPDATE attendance SET pm_in = '$logTime' WHERE atlog_date = '$currentDate' AND employee_id = '{$emp['employee_id']}'");
+            $pm_late = (strtotime($logTime) > strtotime('13:00:00')) ? 'Late' : 'On Time';
+
+            $update_log = $conn->query("UPDATE attendance SET pm_in = '$logTime', pm_late = '$pm_late' WHERE atlog_date = '$currentDate' AND employee_id = '{$emp['employee_id']}'");
             $logMessage = ' time in this afternoon';
         } elseif ($type == 4 && $existing_entry['pm_out'] === null) {
-            $update_log = $conn->query("UPDATE attendance SET pm_out = '$logTime' WHERE atlog_date = '$currentDate' AND employee_id = '{$emp['employee_id']}'");
+            $pm_undertime = (strtotime($logTime) < strtotime('17:00:00')) ? 'Undertime' : 'No';
+
+            $update_log = $conn->query("UPDATE attendance SET pm_out = '$logTime', pm_undertime = '$pm_undertime' WHERE atlog_date = '$currentDate' AND employee_id = '{$emp['employee_id']}'");
             $logMessage = ' time out this afternoon';
         } else {
             $data['status'] = 2;

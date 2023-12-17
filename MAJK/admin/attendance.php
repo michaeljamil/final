@@ -32,9 +32,35 @@
 					</thead>
 					<tbody>
 					<?php
-						$attendance_qry = $conn->query("SELECT a.*,concat(e.firstname,' ',e.middlename,' ',e.lastname) as name, e.employee_id FROM `attendance` a inner join employee e on a.employee_id = e.employee_id ") or die(mysqli_error());
+						$attendance_qry = $conn->query("SELECT a.*,concat(e.firstname,' ',e.middlename,' ',e.lastname)
+														as name, e.employee_id 
+														FROM `attendance` a 
+														inner join employee e 
+														on a.employee_id = e.employee_id ") or die(mysqli_error());
+
 						while ($row = $attendance_qry->fetch_array()) {
-							?>
+							// // Calculate status for morning (AM)
+							// $am_late = (strtotime($row['am_in']) > strtotime('08:00:00')) ? 'Late' : 'On Time';
+							// $am_undertime = (strtotime($row['am_out']) < strtotime('12:00:00')) ? 'Undertime' : 'On Time';
+
+							// // Calculate status for afternoon (PM)
+							// $pm_late = (strtotime($row['pm_in']) > strtotime('13:00:00')) ? 'Late' : 'On Time';
+							// $pm_undertime = (strtotime($row['pm_out']) < strtotime('17:00:00')) ? 'Undertime' : 'On Time';
+
+							// // Update 'am_late', 'am_undertime', 'pm_late', and 'pm_undertime' columns in the database
+							// $update_status_qry = $conn->query("UPDATE `attendance` 
+							// 								SET am_late = '$am_late', am_undertime = '$am_undertime', 
+							// 									pm_late = '$pm_late', pm_undertime = '$pm_undertime' 
+							// 								WHERE atlog_id = {$row['id']}");
+							// if (!$update_status_qry) {
+							// 	// Handle database update errors
+							// 	echo "Error updating record: " . $conn->error;
+							// }
+
+						?>
+
+							
+
 							<tr>
 								<td><?php echo $row['atlog_id'] ?></td>
 								<td><?php echo $row['employee_id'] ?></td>
@@ -48,8 +74,9 @@
 									<center><button data-id="<?php echo $row['atlog_id'] ?>" class="btn btn-sm btn-outline-danger remove_log"
 													type="button"><i class="fa fa-trash"></i></button></center>
 								</td>
-							</tr>
-							<?php
+							</tr><?php
+
+							
 						}
 						?>
 					</tbody>
