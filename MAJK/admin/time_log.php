@@ -30,7 +30,7 @@ if ($qry->num_rows > 0) {
         $existing_entry = $check_entry->fetch_assoc();
 
         if ($type == 1 && $existing_entry['am_in'] === null) {
-            $am_late = (strtotime($logTime) < strtotime('8:00:00')) ? 'Late' : 'On Time';
+            $am_late = (strtotime($logTime) > strtotime('8:00:00')) ? 'Late' : 'On Time';
             
             $update_log = $conn->query("UPDATE attendance SET am_in = '$logTime', am_late = '$am_late' WHERE atlog_date = '$currentDate' AND employee_id = '{$emp['employee_id']}'");
             $logMessage = ' time in this morning';
