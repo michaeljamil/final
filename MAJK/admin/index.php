@@ -47,7 +47,14 @@
 								</div>
 								<div id = "" class = "form-group">
 									<label class = "control-label">Password:</label>
-									<input type = "password" maxlength = "20" name = "password" class = "form-control" required/>
+									<div class="input-group">
+										<input type="password" maxlength="20" name="password" class="form-control" id="password" required/>
+										<div class="input-group-append">
+											<button type="button" class="btn btn-outline-secondary" id="togglePassword">
+												<i class="fa fa-eye-slash"></i>
+											</button>
+										</div>
+									</div>
 								</div>
 								<br />
 								<button type = "submit" class = "btn btn-secondary btn-block" >Login <i class="fa fa-arrow-right"></i></button>
@@ -65,6 +72,20 @@
 
 	<script>
 		$(document).ready(function(){
+			$('#togglePassword').click(function(){
+            const passwordField = $('#password');
+            const fieldType = passwordField.attr('type');
+
+            if (fieldType === 'password') {
+                passwordField.attr('type', 'text');
+                $(this).find('i').removeClass('fa-eye-slash').addClass('fa-eye');
+            } else {
+                passwordField.attr('type', 'password');
+                $(this).find('i').removeClass('fa-eye').addClass('fa-eye-slash');
+            }
+        });
+
+
 			$('#login-frm').submit(function(e){
 				e.preventDefault();
 				$.ajax({
@@ -85,5 +106,6 @@
 				})
 			})
 		})
+
 	</script>
 </html>
