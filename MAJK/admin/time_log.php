@@ -14,7 +14,7 @@ if (!isset($eno, $type, $hour, $minute, $second, $period)) {
 $currentDate = date('Y-m-d');
 
 // Query the database to check if the employee exists
-$qry = $conn->query("SELECT * from employee where employee_id ='$eno'");
+$qry = $conn->query("SELECT * FROM employee WHERE employee_id ='$eno'");
 
 if ($qry->num_rows > 0) {
     $emp = $qry->fetch_array();
@@ -22,30 +22,59 @@ if ($qry->num_rows > 0) {
     // Construct the time in a format suitable for database insertion
     $logTime = $hour . ':' . $minute . ':' . $second . ' ' . $period;
 
-    // Insert the log into the 'attendance' table
+    // Check if an entry already exists for the day
+    $check_entry = $conn->query("SELECT * FROM attendance WHERE atlog_date = '$currentDate' AND employee_id = '{$emp['employee_id']}'");
 
-	if ($type == 1) {
-		$save_log = $conn->query("INSERT IGNORE INTO attendance (atlog_date, employee_id, am_in) VALUES ('$currentDate', '{$emp['employee_id']}', '$logTime')");
-		$logMessage = ' time in this morning';
-	} elseif ($type == 2) {
-		$save_log = $conn->query("INSERT IGNORE INTO attendance (atlog_date, employee_id, am_out) VALUES ('$currentDate', '{$emp['employee_id']}', '$logTime')");
-		$logMessage = ' time out this morning';
-	} elseif ($type == 3) {
-		$save_log = $conn->query("INSERT IGNORE INTO attendance (atlog_date, employee_id, pm_in) VALUES ('$currentDate', '{$emp['employee_id']}', '$logTime')");
-		$logMessage = ' time in this afternoon';
-	} elseif ($type == 4) {
-		$save_log = $conn->query("INSERT IGNORE INTO attendance (atlog_date, employee_id, pm_out) VALUES ('$currentDate', '{$emp['employee_id']}', '$logTime')");
-		$logMessage = ' time out this afternoon';
-	}	
+    if ($check_entry->num_rows > 0) {
+        // If entry exists, update the appropriate column based on $type
+        $logMessage = ''; // Initialize $logMessage here
 
-    $employee = ucwords($emp['firstname']);
+        if ($type == 1) {
+            $update_log = $conn->query("UPDATE attendance SET am_in = '$logTime' WHERE atlog_date = '$currentDate' AND employee_id = '{$emp['employee_id']}'");
+            $logMessage = ' time in this morning';
+        } elseif ($type == 2) {
+            $update_log = $conn->query("UPDATE attendance SET am_out = '$logTime' WHERE atlog_date = '$currentDate' AND employee_id = '{$emp['employee_id']}'");
+            $logMessage = ' time out this morning';
+        } elseif ($type == 3) {
+            $update_log = $conn->query("UPDATE attendance SET pm_in = '$logTime' WHERE atlog_date = '$currentDate' AND employee_id = '{$emp['employee_id']}'");
+            $logMessage = ' time in this afternoon';
+        } elseif ($type == 4) {
+            $update_log = $conn->query("UPDATE attendance SET pm_out = '$logTime' WHERE atlog_date = '$currentDate' AND employee_id = '{$emp['employee_id']}'");
+            $logMessage = ' time out this afternoon';
+        }
 
-    if ($save_log) {
-        $data['status'] = 1;
-        $data['msg'] = $employee . ', your ' . $logMessage . ' has been successfully recorded. <br/>';
+        if ($update_log) {
+            $data['status'] = 1;
+            $data['msg'] = isset($emp['employee']) ? $emp['employee'] . ', your ' . $logMessage . ' has been successfully recorded. <br/>' : 'Your ' . $logMessage . ' has been successfully recorded. <br/>';
+        } else {
+            $data['status'] = 2;
+            $data['msg'] = 'Failed to update time.';
+        }
     } else {
-        $data['status'] = 2;
-        $data['msg'] = 'Failed to record time.';
+        // If entry doesn't exist, create a new entry
+        $logMessage = ''; // Initialize $logMessage here
+
+        if ($type == 1) {
+            $create_log = $conn->query("INSERT IGNORE INTO attendance (atlog_date, employee_id, am_in, am_out, pm_in, pm_out) VALUES ('$currentDate', '{$emp['employee_id']}', '$logTime', NULL, NULL, NULL)");
+            $logMessage = ' time in this morning';
+        } elseif ($type == 2) {
+            $create_log = $conn->query("INSERT IGNORE INTO attendance (atlog_date, employee_id, am_in, am_out, pm_in, pm_out) VALUES ('$currentDate', '{$emp['employee_id']}', NULL,'$logTime', NULL, NULL)");
+            $logMessage = ' time out this morning';
+        } elseif ($type == 3) {
+            $create_log = $conn->query("INSERT IGNORE INTO attendance (atlog_date, employee_id, am_in, am_out, pm_in, pm_out) VALUES ('$currentDate', '{$emp['employee_id']}', NULL, NULL, '$logTime', NULL)");
+            $logMessage = ' time in this afternoon';
+        } elseif ($type == 4) {
+            $create_log = $conn->query("INSERT IGNORE INTO attendance (atlog_date, employee_id, am_in, am_out, pm_in, pm_out) VALUES ('$currentDate', '{$emp['employee_id']}', NULL, NULL, NULL, '$logTime')");
+            $logMessage = ' time out this afternoon';
+        }
+
+        if ($create_log) {
+            $data['status'] = 1;
+            $data['msg'] = isset($emp['employee']) ? $emp['employee'] . ', your ' . $logMessage . ' has been successfully recorded. <br/>' : 'Your ' . $logMessage . ' has been successfully recorded. <br/>';
+        } else {
+            $data['status'] = 2;
+            $data['msg'] = 'Failed to record time.';
+        }
     }
 } else {
     $data['status'] = 2;
