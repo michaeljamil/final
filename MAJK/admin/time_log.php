@@ -26,29 +26,26 @@ if ($qry->num_rows > 0) {
     $check_entry = $conn->query("SELECT * FROM attendance WHERE atlog_date = '$currentDate' AND employee_id = '{$emp['employee_id']}'");
 
     if ($check_entry->num_rows > 0) {
-        // If entry exists, update the appropriate column based on $type
-        $logMessage = ''; // Initialize $logMessage here
+        // If entry exists, check if the specific field is NULL
+        $existing_entry = $check_entry->fetch_assoc();
 
-        if ($type == 1) {
+        if ($type == 1 && $existing_entry['am_in'] === null) {
             $update_log = $conn->query("UPDATE attendance SET am_in = '$logTime' WHERE atlog_date = '$currentDate' AND employee_id = '{$emp['employee_id']}'");
             $logMessage = ' time in this morning';
-        } elseif ($type == 2) {
+        } elseif ($type == 2 && $existing_entry['am_out'] === null) {
             $update_log = $conn->query("UPDATE attendance SET am_out = '$logTime' WHERE atlog_date = '$currentDate' AND employee_id = '{$emp['employee_id']}'");
             $logMessage = ' time out this morning';
-        } elseif ($type == 3) {
+        } elseif ($type == 3 && $existing_entry['pm_in'] === null) {
             $update_log = $conn->query("UPDATE attendance SET pm_in = '$logTime' WHERE atlog_date = '$currentDate' AND employee_id = '{$emp['employee_id']}'");
             $logMessage = ' time in this afternoon';
-        } elseif ($type == 4) {
+        } elseif ($type == 4 && $existing_entry['pm_out'] === null) {
             $update_log = $conn->query("UPDATE attendance SET pm_out = '$logTime' WHERE atlog_date = '$currentDate' AND employee_id = '{$emp['employee_id']}'");
             $logMessage = ' time out this afternoon';
-        }
-
-        if ($update_log) {
-            $data['status'] = 1;
-            $data['msg'] = isset($emp['employee']) ? $emp['employee'] . ', your ' . $logMessage . ' has been successfully recorded. <br/>' : 'Your ' . $logMessage . ' has been successfully recorded. <br/>';
         } else {
             $data['status'] = 2;
-            $data['msg'] = 'Failed to update time.';
+            $data['msg'] = 'Failed! Entry already exists with a value. You cannot update it.';
+            echo json_encode($data);
+            exit; // Terminate script execution
         }
     } else {
         // If entry doesn't exist, create a new entry
@@ -76,6 +73,9 @@ if ($qry->num_rows > 0) {
             $data['msg'] = 'Failed to record time.';
         }
     }
+    // Add success message if an update or new entry was successful
+    $data['status'] = 1;
+    $data['msg'] = $emp['employee_id'] . ', your ' . $logMessage . ' has been successfully recorded. <br/>';
 } else {
     $data['status'] = 2;
     $data['msg'] = 'Failed! Unknown Employee Number';
