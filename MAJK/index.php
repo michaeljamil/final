@@ -2,7 +2,15 @@
 <html lang="eng">
 <head>
     <title>MAJK Employee Attendance System</title>
-    <?php include('header.php') ?>
+    <?php 
+        include('header.php');
+        // if (!isset($conn) || !($conn instanceof mysqli && $conn->ping())) {
+            // include_once('admin/db_connect.php');
+        
+    ?>
+    <?php
+        include_once('admin/db_connect.php');
+    ?>
 </head>
 <body class="emp-dash">
     <div id="main" class="bg-dark">
