@@ -19,11 +19,14 @@
 				<table id="table" class="table table-bordered table-striped">
 					<thead>
 						<tr>
+							<th>Attendancane Log ID</th>
 							<th>Employee ID</th>
 							<th>Name</th>
 							<th>Date</th>
-							<th>Log Type</th>
-							<th>Time</th>
+							<th>AM In</th>
+							<th>AM Out</th>
+							<th>PM In</th>
+							<th>PM Out</th>
 							<th>Action</th>
 						</tr>
 					</thead>
@@ -34,23 +37,14 @@
 							
 					?>	
 						<tr>
+							<td><?php echo $row['atlog_id']?></td>
 							<td><?php echo $row['employee_id']?></td>
 							<td><?php echo htmlentities($row['name'])?></td>
 							<td><?php echo date("F d, Y", strtotime($row['atlog_date']))?></td>
-							<?php 
-							if($row['log_type'] ==1){
-								$log = "TIME IN AM";
-							}elseif($row['log_type'] ==2){
-								$log = "TIME OUT AM";
-							}
-							elseif($row['log_type'] ==3){
-								$log = "TIME IN PM";
-							}elseif($row['log_type'] ==4){
-								$log = "TIME OUT PM";
-							}
-							?>
-							<td><?php echo $log ?></td>
-							<td><?php echo date("h:i a", strtotime($row['atlog_date']))?></td>
+							<td><?php echo date("h:i a", strtotime($row['am_in']))?></td>
+							<td><?php echo date("h:i a", strtotime($row['am_out']))?></td>
+							<td><?php echo date("h:i a", strtotime($row['pm_in']))?></td>
+							<td><?php echo date("h:i a", strtotime($row['pm_out']))?></td>
 							<td><center><button data-id = "<?php echo $row['atlog_id']?>" class = "btn btn-sm btn-outline-danger remove_log" type="button"><i class = "fa fa-trash"></i></button></center></td>
 						</tr>
 					<?php
