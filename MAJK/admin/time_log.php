@@ -25,29 +25,27 @@ if ($qry->num_rows > 0) {
     // Check if an entry already exists for the day
     $check_entry = $conn->query("SELECT * FROM attendance WHERE atlog_date = '$currentDate' AND employee_id = '{$emp['employee_id']}'");
 
+
+        $am_late = (strtotime($logTime) > strtotime('08:00:00')) ? 'Late' : 'On Time';
+        $am_undertime = (strtotime($logTime) < strtotime('12:00:00')) ? 'Undertime' : 'No';
+        $pm_late = (strtotime($logTime) > strtotime('13:00:00')) ? 'Late' : 'On Time';
+        $pm_undertime = (strtotime($logTime) < strtotime('17:00:00')) ? 'Undertime' : 'No';
+
     if ($check_entry->num_rows > 0) {
         // If entry exists, check if the specific field is NULL
         $existing_entry = $check_entry->fetch_assoc();
+        
 
         if ($type == 1 && $existing_entry['am_in'] === null) {
-            $am_late = (strtotime($logTime) > strtotime('8:00:00')) ? 'Late' : 'On Time';
-            
             $update_log = $conn->query("UPDATE attendance SET am_in = '$logTime', am_late = '$am_late' WHERE atlog_date = '$currentDate' AND employee_id = '{$emp['employee_id']}'");
             $logMessage = ' time in this morning';
-        
         } elseif ($type == 2 && $existing_entry['am_out'] === null) {
-            $am_undertime = (strtotime($logTime) < strtotime('12:00:00')) ? 'Undertime' : 'No';
-           
             $update_log = $conn->query("UPDATE attendance SET am_out = '$logTime', am_undertime = '$am_undertime' WHERE atlog_date = '$currentDate' AND employee_id = '{$emp['employee_id']}'");
             $logMessage = ' time out this morning';
         } elseif ($type == 3 && $existing_entry['pm_in'] === null) {
-            $pm_late = (strtotime($logTime) > strtotime('13:00:00')) ? 'Late' : 'On Time';
-
             $update_log = $conn->query("UPDATE attendance SET pm_in = '$logTime', pm_late = '$pm_late' WHERE atlog_date = '$currentDate' AND employee_id = '{$emp['employee_id']}'");
             $logMessage = ' time in this afternoon';
         } elseif ($type == 4 && $existing_entry['pm_out'] === null) {
-            $pm_undertime = (strtotime($logTime) < strtotime('17:00:00')) ? 'Undertime' : 'No';
-
             $update_log = $conn->query("UPDATE attendance SET pm_out = '$logTime', pm_undertime = '$pm_undertime' WHERE atlog_date = '$currentDate' AND employee_id = '{$emp['employee_id']}'");
             $logMessage = ' time out this afternoon';
         } else {
@@ -61,16 +59,16 @@ if ($qry->num_rows > 0) {
         $logMessage = ''; // Initialize $logMessage here
 
         if ($type == 1) {
-            $create_log = $conn->query("INSERT IGNORE INTO attendance (atlog_date, employee_id, am_in, am_out, pm_in, pm_out) VALUES ('$currentDate', '{$emp['employee_id']}', '$logTime', NULL, NULL, NULL)");
+            $create_log = $conn->query("INSERT IGNORE INTO attendance (atlog_date, employee_id, am_in, am_late) VALUES ('$currentDate', '{$emp['employee_id']}', '$logTime', '$am_late')");
             $logMessage = ' time in this morning';
         } elseif ($type == 2) {
-            $create_log = $conn->query("INSERT IGNORE INTO attendance (atlog_date, employee_id, am_in, am_out, pm_in, pm_out) VALUES ('$currentDate', '{$emp['employee_id']}', NULL,'$logTime', NULL, NULL)");
+            $create_log = $conn->query("INSERT IGNORE INTO attendance (atlog_date, employee_id, am_out, am_undertime) VALUES ('$currentDate', '{$emp['employee_id']}','$logTime', '$am_undertime')");
             $logMessage = ' time out this morning';
         } elseif ($type == 3) {
-            $create_log = $conn->query("INSERT IGNORE INTO attendance (atlog_date, employee_id, am_in, am_out, pm_in, pm_out) VALUES ('$currentDate', '{$emp['employee_id']}', NULL, NULL, '$logTime', NULL)");
+            $create_log = $conn->query("INSERT IGNORE INTO attendance (atlog_date, employee_id, pm_in, pm_late) VALUES ('$currentDate', '{$emp['employee_id']}', '$logTime', '$pm_late')");
             $logMessage = ' time in this afternoon';
         } elseif ($type == 4) {
-            $create_log = $conn->query("INSERT IGNORE INTO attendance (atlog_date, employee_id, am_in, am_out, pm_in, pm_out) VALUES ('$currentDate', '{$emp['employee_id']}', NULL, NULL, NULL, '$logTime')");
+            $create_log = $conn->query("INSERT IGNORE INTO attendance (atlog_date, employee_id, pm_out) VALUES ('$currentDate', '{$emp['employee_id']}','$logTime', '$pm_undertime')");
             $logMessage = ' time out this afternoon';
         }
 
@@ -90,5 +88,8 @@ if ($qry->num_rows > 0) {
     $data['msg'] = 'Failed! Unknown Employee Number';
 }
 echo json_encode($data);
+
+
+
 $conn->close();
 ?>
