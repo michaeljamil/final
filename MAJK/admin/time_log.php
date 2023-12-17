@@ -67,7 +67,7 @@ if ($qry->num_rows > 0) {
 
         if ($create_log) {
             $data['status'] = 1;
-            $data['msg'] = isset($emp['employee']) ? $emp['employee'] . ', your ' . $logMessage . ' has been successfully recorded. <br/>' : 'Your ' . $logMessage . ' has been successfully recorded. <br/>';
+            $data['msg'] = isset($emp['firstname']) ? $emp['firstname'] . ', your ' . $logMessage . ' has been successfully recorded. <br/>' : 'Your ' . $logMessage . ' has been successfully recorded. <br/>';
         } else {
             $data['status'] = 2;
             $data['msg'] = 'Failed to record time.';
@@ -75,7 +75,7 @@ if ($qry->num_rows > 0) {
     }
     // Add success message if an update or new entry was successful
     $data['status'] = 1;
-    $data['msg'] = $emp['employee_id'] . ', your ' . $logMessage . ' has been successfully recorded. <br/>';
+    $data['msg'] = $emp['firstname'] . ', your ' . $logMessage . ' has been successfully recorded. <br/>';
 } else {
     $data['status'] = 2;
     $data['msg'] = 'Failed! Unknown Employee Number';

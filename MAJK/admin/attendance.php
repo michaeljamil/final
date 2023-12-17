@@ -33,23 +33,25 @@
 					<tbody>
 					<?php
 						$attendance_qry = $conn->query("SELECT a.*,concat(e.firstname,' ',e.middlename,' ',e.lastname) as name, e.employee_id FROM `attendance` a inner join employee e on a.employee_id = e.employee_id ") or die(mysqli_error());
-						while($row = $attendance_qry->fetch_array()){
-							
-					?>	
-						<tr>
-							<td><?php echo $row['atlog_id']?></td>
-							<td><?php echo $row['employee_id']?></td>
-							<td><?php echo htmlentities($row['name'])?></td>
-							<td><?php echo date("F d, Y", strtotime($row['atlog_date']))?></td>
-							<td><?php echo date("h:i a", strtotime($row['am_in']))?></td>
-							<td><?php echo date("h:i a", strtotime($row['am_out']))?></td>
-							<td><?php echo date("h:i a", strtotime($row['pm_in']))?></td>
-							<td><?php echo date("h:i a", strtotime($row['pm_out']))?></td>
-							<td><center><button data-id = "<?php echo $row['atlog_id']?>" class = "btn btn-sm btn-outline-danger remove_log" type="button"><i class = "fa fa-trash"></i></button></center></td>
-						</tr>
-					<?php
+						while ($row = $attendance_qry->fetch_array()) {
+							?>
+							<tr>
+								<td><?php echo $row['atlog_id'] ?></td>
+								<td><?php echo $row['employee_id'] ?></td>
+								<td><?php echo htmlentities($row['name']) ?></td>
+								<td><?php echo date("F d, Y", strtotime($row['atlog_date'])) ?></td>
+								<td><?php echo ($row['am_in'] !== null) ? date("h:i a", strtotime($row['am_in'])) : 'N/A'; ?></td>
+								<td><?php echo ($row['am_out'] !== null) ? date("h:i a", strtotime($row['am_out'])) : 'N/A'; ?></td>
+								<td><?php echo ($row['pm_in'] !== null) ? date("h:i a", strtotime($row['pm_in'])) : 'N/A'; ?></td>
+								<td><?php echo ($row['pm_out'] !== null) ? date("h:i a", strtotime($row['pm_out'])) : 'N/A'; ?></td>
+								<td>
+									<center><button data-id="<?php echo $row['atlog_id'] ?>" class="btn btn-sm btn-outline-danger remove_log"
+													type="button"><i class="fa fa-trash"></i></button></center>
+								</td>
+							</tr>
+							<?php
 						}
-					?>	
+						?>
 					</tbody>
 				</table>
 			<br />

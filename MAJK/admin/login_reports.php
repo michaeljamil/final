@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <?php
     require_once 'auth.php';
+    include 'db_connect.php'; // Include the file that establishes the database connection
 ?>
 <html lang="eng">
 <head>
@@ -11,8 +12,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script>
     <style>
-
-
         .alert-primary {
             background-color: #3498db;
             color: #fff;
@@ -62,7 +61,7 @@
                     5 => '#9b59b6', 
                 ];
 
-                $attendance_qry = $conn->query("SELECT a.*, concat(e.firstname,' ',e.middlename,' ',e.lastname) as name, e.employee_id FROM `attendance` a inner join employee e on a.employee_id = e.employee_id ") or die(mysqli_error());
+                $attendance_qry = $conn->query("SELECT a.*, CONCAT(e.firstname, ' ', e.middlename, ' ', e.lastname) AS name FROM `attendance` a INNER JOIN employee e ON a.employee_id = e.employee_id") or die(mysqli_error());
 
                 while ($row = $attendance_qry->fetch_array()) {
                     $employeeId = $row['employee_id'];
@@ -71,18 +70,27 @@
                         $employeeColors[$employeeId] = '#95a5a6'; 
                     }
 
-                    $event = [
-                        'title' => $row['name'],
-                        'start' => date('Y-m-d H:00:s', strtotime($row['datetime_log'])), 
+                    // Create "time in" event
+                    $eventIn = [
+                        'title' => $row['name'] . ' (Time In)',
+                        'start' => $row['atlog_date'] . ' ' . $row['am_in'], // Adjust this according to your database structure
                         'allDay' => false,
                         'url' => 'javascript:void(0);',
                         'color' => $employeeColors[$employeeId], 
                     ];
 
-                    array_push($events, $event);
+                    // Create "time out" event
+                    $eventOut = [
+                        'title' => $row['name'] . ' (Time Out)',
+                        'start' => $row['atlog_date'] . ' ' . $row['pm_out'], // Adjust this according to your database structure
+                        'allDay' => false,
+                        'url' => 'javascript:void(0);',
+                        'color' => $employeeColors[$employeeId], 
+                    ];
+
+                    array_push($events, $eventIn, $eventOut);
                 }
             ?>
-           
         </div>
     </div>
 </body>
@@ -107,27 +115,20 @@
             events: events,
             eventClick: function(calEvent, jsEvent, view) {
                 alert('Attendance: ' + calEvent.title);
-                
             },
             viewRender: function(view, element) {
-                
                 $('.fc-axis.fc-widget-header').hide();
             }
         });
 
-       
         $('#searchInput').on('input', function() {
             var searchString = $(this).val().toLowerCase();
-
             
             filteredEvents = events.filter(function(event) {
                 return event.title.toLowerCase().includes(searchString);
             });
-
             
             $('#calendar').fullCalendar('removeEvents');
-
-            
             $('#calendar').fullCalendar('addEventSource', filteredEvents);
         });
     });
