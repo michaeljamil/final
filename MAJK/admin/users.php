@@ -82,7 +82,7 @@
 							<h4 class="modal-title"></h4>
 							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 						</div>
-						<form id="user-frm">
+						<form id="user-frm" >
 							<div class ="modal-body">
 								<input type="hidden" name='id'>
 								<div class="form-group">
@@ -91,7 +91,11 @@
 								</div>
 								<div class="form-group">
 									<label>Password:</label>
-									<input type="password" maxlength="20" required="required" name="password" class="form-control" />
+									<input type="password" maxlength="20" required="required" id="password" name="password" class="form-control" />
+								</div>
+								<div class="form-group">
+									<label>Confirm Password:</label>
+									<input type="password" maxlength="20" required="required" name="confirm_password" class="form-control"  />
 								</div>
 								<div class="form-group">
 									<label>Firstname:</label>
@@ -116,11 +120,29 @@
 		});
 	</script>
 	<script type="text/javascript">
+		
+
 		$(document).ready(function(){
+			// $('#password, #confirm_password').on('keyup', function () {
+			// 	if ($('#password').val() == $('#confirm_password').val()) {
+			// 		$('#message').html('Passwords match').css('color', 'green');
+			// 	} else {
+			// 		$('#message').html('Passwords do not match').css('color', 'red');
+			// 	}
+			// });
+
+		
 			$('#user-frm').submit(function(e){
-				e.preventDefault()
-				$('#user-frm [name="submit"]').attr('disabled',true)
-				$('#user-frm [name="submit"]').html('Saving')
+				e.preventDefault();
+
+				var password = $('#password').val();
+				var confirm_password = $('[name="confirm_password"]').val();
+
+				if (password !== confirm_password) {
+					alert('Passwords do not match');
+					return;
+				}
+
 				$.ajax({
 					url:'save_user.php',
 					method:"POST",
@@ -188,5 +210,8 @@
 				$('#manage_user').modal('show')
 			})
 		});
+
+
 	</script>
+	
 </html>
