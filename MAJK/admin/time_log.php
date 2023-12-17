@@ -43,7 +43,7 @@ if ($qry->num_rows > 0) {
             $logMessage = ' time out this afternoon';
         } else {
             $data['status'] = 2;
-            $data['msg'] = 'Failed! Entry already exists with a value. You cannot update it.';
+            $data['msg'] = 'You already have an entry for today!';
             echo json_encode($data);
             exit; // Terminate script execution
         }
@@ -80,7 +80,6 @@ if ($qry->num_rows > 0) {
     $data['status'] = 2;
     $data['msg'] = 'Failed! Unknown Employee Number';
 }
-
 echo json_encode($data);
 $conn->close();
 ?>
