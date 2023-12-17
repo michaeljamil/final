@@ -11,6 +11,22 @@
 		<?php include 'header.php' ?>
 	</head>
 	<body>
+		<div class="modal fade" id="login_alert" tabindex="-1" role="dialog">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content panel-primary">
+							<div class="modal-header panel-heading">
+								<h6 class="modal-title">Login Failed</h6>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							</div>
+							<div class="modal-body">
+        						<p>Your login attempt has failed. Please check your username and password and try again.</p>
+							</div>
+
+						
+						</div>	
+					</div>
+		</div>
+
 		<div class="button-container-admin bg-dark">
 			<button class="adminbutton"><a href="../index.php">Employee Login</a></button>
 		</div>
@@ -56,11 +72,14 @@
 					method:'POST',
 					data:$(this).serialize(),
 					error:err=>{
-						console.log(err)
+						console.log(err);
 					},
 					success:function(resp){
-						if(resp== true){
-							location.replace('home.php')
+						if(resp == true){
+							location.replace('home.php');
+						} else{
+							$('#login_alert .modal-title').html('Login Failed')
+							$('#login_alert').modal('show')
 						}
 					}
 				})

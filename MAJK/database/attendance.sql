@@ -42,12 +42,11 @@ CREATE TABLE `attendance` (
 --
 
 CREATE TABLE `employee` (
-  `id` int(20) NOT NULL,
+  `employee_id` int(20) NOT NULL,
   `employee_no` varchar(100) NOT NULL,
   `firstname` varchar(50) NOT NULL,
   `middlename` varchar(20) NOT NULL,
   `lastname` varchar(50) NOT NULL,
-  `department` varchar(100) NOT NULL,
   `position` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
