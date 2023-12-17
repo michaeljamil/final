@@ -8,9 +8,14 @@
 		echo true;
 		session_start();
 		foreach($login as $k => $v){
-			if(!is_numeric($k) && $k !='password')
-			$_SESSION['login_'.$k] = $v;
+			if(!is_numeric($k) && $k !='password'){
+				$_SESSION['login_'.$k] = $v;
+			} 
+			
 		}
+	} else{
+		echo false;
 	}
 
 	$conn->close();
+?>
