@@ -76,7 +76,7 @@ include 'db_connect.php'; // Include the file that establishes the database conn
                 if (isset($row['am_in'])) {
                     // Create "AM Time In" event
                     $eventInAM = [
-                        'title' => $row['name'] . ' (AM Time In) - ' . getStatus($row['am_late'], $row['am_undertime']) . ' - ' . $row['am_in'],
+                        'title' => $row['name'] . ' (AM Time In) - ' . getStatus($row['am_late']) . ' - ' . $row['am_in'],
                         'start' => $row['atlog_date'] . 'T' . $row['am_in'], // ISO 8601 date-time format
                         'allDay' => false,
                         'color' => $employeeColors[$employeeId],
@@ -90,7 +90,7 @@ include 'db_connect.php'; // Include the file that establishes the database conn
                 if (isset($row['am_out'])) {
                     // Create "AM Time Out" event
                     $eventOutAM = [
-                        'title' => $row['name'] . ' (AM Time Out) - ' . getStatus($row['am_late'], $row['am_undertime']) . ' - ' . $row['am_out'],
+                        'title' => $row['name'] . ' (AM Time Out) - ' . getStatus($row['am_undertime']) . ' - ' . $row['am_out'],
                         'start' => $row['atlog_date'] . 'T' . $row['am_out'], // ISO 8601 date-time format
                         'allDay' => false,
                         'color' => $employeeColors[$employeeId],
@@ -104,7 +104,7 @@ include 'db_connect.php'; // Include the file that establishes the database conn
                 if (isset($row['pm_in'])) {
                     // Create "PM Time In" event
                     $eventInPM = [
-                        'title' => $row['name'] . ' (PM Time In) - ' . getStatus($row['pm_late'], $row['pm_undertime']) . ' - ' . $row['pm_in'],
+                        'title' => $row['name'] . ' (PM Time In) - ' . getStatus($row['pm_late']) . ' - ' . $row['pm_in'],
                         'start' => $row['atlog_date'] . 'T' . $row['pm_in'], // ISO 8601 date-time format
                         'allDay' => false,
                         'color' => $employeeColors[$employeeId],
@@ -118,7 +118,7 @@ include 'db_connect.php'; // Include the file that establishes the database conn
                 if (isset($row['pm_out'])) {
                     // Create "PM Time Out" event
                     $eventOutPM = [
-                        'title' => $row['name'] . ' (PM Time Out) - ' . getStatus($row['pm_late'], $row['pm_undertime']) . ' - ' . $row['pm_out'],
+                        'title' => $row['name'] . ' (PM Time Out) - ' . getStatus($row['pm_undertime']) . ' - ' . $row['pm_out'],
                         'start' => $row['atlog_date'] . 'T' . $row['pm_out'], // ISO 8601 date-time format
                         'allDay' => false,
                         'color' => $employeeColors[$employeeId],
@@ -130,10 +130,10 @@ include 'db_connect.php'; // Include the file that establishes the database conn
             }
 
             // Function to determine late or undertime status
-            function getStatus($late, $undertime) {
-                if ($late === 'Late') {
+            function getStatus($status) {
+                if ($status === 'Late') {
                     return 'Late';
-                } elseif ($undertime === 'Undertime') {
+                } elseif ($status === 'Undertime') {
                     return 'Undertime';
                 } else {
                     return 'On Time';
