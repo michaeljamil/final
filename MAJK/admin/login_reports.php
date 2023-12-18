@@ -63,7 +63,9 @@ include 'db_connect.php'; // Include the file that establishes the database conn
                 5 => '#9b59b6',
             ];
 
-            $attendance_qry = $conn->query("SELECT atlog_id, a.employee_id, CONCAT(e.firstname, ' ', e.middlename, ' ', e.lastname) AS name, atlog_date, am_in, am_out, pm_in, pm_out, am_late, am_undertime, pm_late, pm_undertime FROM `attendance` a INNER JOIN employee e ON a.employee_id = e.employee_id") or die(mysqli_error());
+            $attendance_qry = $conn->query("SELECT atlog_id, a.employee_id, CONCAT(e.firstname, ' ', e.middlename, ' ', e.lastname)
+                                            AS name, atlog_date, am_in, am_out, pm_in, pm_out, am_late, am_undertime, pm_late, pm_undertime
+                                            FROM `attendance` a INNER JOIN employee e ON a.employee_id = e.employee_id") or die(mysqli_error());
 
             while ($row = $attendance_qry->fetch_array()) {
                 $employeeId = $row['employee_id'];

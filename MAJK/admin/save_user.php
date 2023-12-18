@@ -20,7 +20,8 @@
 				$data ['status'] = 2;
 				$data['msg'] = 'Username already exist';
 			}else{
-				$save=$conn->query("UPDATE users set username = '$username',password = '$password',firstname = '$firstname',lastname = '$lastname' where employee_id = $id ");
+				$save=$conn->query("UPDATE users set username = '$username',password = '$password',firstname = '$firstname',lastname = '$lastname'
+									where employee_id = $id ");
 				if($save){
 					$data ['status'] =1;
 					$data['msg'] = 'Data successfully updated.';

@@ -11,18 +11,7 @@
 		<?php include('nav_bar.php') ?>
 		
 		<div class="container-fluid admin" >
-			<div class="alert alert-primary">Employee List</div>
-			<div class="modal fade" id="edit_student" tabindex="-1" role="dialog" aria-labelledby="myModallabel">
-				<div class="modal-dialog" role="document">
-					<div class="modal-content panel-warning">
-						<div class="modal-header panel-heading">
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-							<h4 class="modal-title" id="myModallabel">Edit Student</h4>
-						</div>
-						<div id="edit_query"></div>
-					</div>
-				</div>
-			</div>
+			
 			<div class="well col-lg-12">
 				<button class="btn btn-success" type="button" id="new_emp_btn"><span class="fa fa-plus"></span> Add new </button>
 				<br />
@@ -161,7 +150,7 @@
 					success:function(resp){
 						if(typeof resp !=undefined){
 							resp = JSON.parse(resp)
-							$('[name="id"]').val(resp.id)
+							$('[name="id"]').val($id)
 							$('[name="firstname"]').val(resp.firstname)
 							$('[name="lastname"]').val(resp.lastname)
 							$('[name="middlename"]').val(resp.middlename)
