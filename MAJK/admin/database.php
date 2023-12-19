@@ -1,7 +1,7 @@
 <?php
-    $servername = "localhost"; // Replace with your MySQL server name
-    $username = "root"; // Replace with your MySQL username
-    $password = ""; // Replace with your MySQL password
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
 
     // Create connection
     $conn = new mysqli($servername, $username, $password);
@@ -19,9 +19,7 @@
 
     $conn->select_db("majk_db");
 
-
-    
-
+    //Create employee table if not exist
     $sql_employee = "CREATE TABLE IF NOT EXISTS `employee` (
         `employee_id` int(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
         `firstname` varchar(50) NOT NULL,
@@ -33,7 +31,8 @@
     if (!($conn->query($sql_employee))) {
         echo "Error creating table: " . $conn->error;
     };
-
+    
+    //Create users table if not exist
     $sql_users = "CREATE TABLE IF NOT EXISTS `users` (
         `id` int(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
         `username` varchar(30) NOT NULL,
@@ -46,6 +45,7 @@
         echo "Error creating table: " . $conn->error;
     };
 
+    //Insert the default admin
     $sql_insertUser = "REPLACE INTO `users`(
         `id`, `username`, `password`, `firstname`, `lastname`) 
         VALUES (1, 'admin', 'admin', 'Admin', 'admin')";
@@ -54,7 +54,7 @@
         echo "Error inserting user: " . $conn->error;
     };
 
-    
+    //Create attendance table if not exist
     $sql_attendance = "CREATE TABLE IF NOT EXISTS attendance (
         atlog_id INT(11) AUTO_INCREMENT PRIMARY KEY,
         employee_id INT(11) NOT NULL,
